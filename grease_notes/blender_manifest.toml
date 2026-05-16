@@ -1,0 +1,27 @@
+schema_version = "1.0.0"
+
+id = "grease_notes"
+version = "1.0.0"
+name = "Grease Notes"
+tagline = "Create Blender notes with optional viewport thumbnails"
+maintainer = "Dk"
+type = "add-on"
+
+# Target build requested for this project.
+blender_version_min = "5.1.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+tags = [
+  "Animation",
+  "Grease Pencil",
+  "User Interface",
+  "3D View",
+]
+
+# Used only when capturing viewport thumbnails through a temporary image file.
+permissions = [
+  "files",
+]
