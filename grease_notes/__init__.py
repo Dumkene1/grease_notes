@@ -3,7 +3,7 @@
 
 bl_info = {
     "name": "Grease Notes",
-    "author": "Dumkene Izuora",
+    "author": "Dk",
     "version": (0, 1, 3),
     "blender": (5, 1, 0),
     "location": "3D Viewport > Sidebar > Grease Notes",
