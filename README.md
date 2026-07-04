@@ -1,6 +1,6 @@
 # Grease Notes
 
-**Grease Notes** is a Blender 5.1 extension for creating notes, reminders, and visual frame references directly inside Blender.
+**Grease Notes** is a Blender3D extension for creating notes, reminders, and visual frame references directly inside Blender.
 
 It is designed for general Blender work and Grease Pencil animation workflows. You can create notes linked to scenes, objects, frames, and Grease Pencil context, with optional viewport thumbnails for quick visual reference.
 
