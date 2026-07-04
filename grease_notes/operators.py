@@ -175,6 +175,82 @@ class GN_OT_delete_thumbnail(bpy.types.Operator):
         return {"FINISHED"}
 
 
+class GN_OT_view_thumbnail(bpy.types.Operator):
+    bl_idname = "grease_notes.view_thumbnail"
+    bl_label = "View Thumbnail in Image Editor"
+    bl_description = "Open the selected note's thumbnail in Blender's Image Editor"
+    bl_options = {"REGISTER"}
+
+    index: IntProperty(default=-1)
+
+    def execute(self, context):
+        scene = context.scene
+        index = self.index if self.index >= 0 else scene.grease_notes_settings.active_note_index
+        if index < 0 or index >= len(scene.grease_notes):
+            self.report({"WARNING"}, "No note selected.")
+            return {"CANCELLED"}
+
+        note = scene.grease_notes[index]
+        if not note.thumbnail_image_name:
+            self.report({"WARNING"}, "Selected note has no thumbnail.")
+            return {"CANCELLED"}
+
+        image = bpy.data.images.get(note.thumbnail_image_name)
+        if not image:
+            self.report({"WARNING"}, "Thumbnail image data was not found.")
+            return {"CANCELLED"}
+
+        screen = context.screen
+        if not screen:
+            self.report({"WARNING"}, "No active screen found.")
+            return {"CANCELLED"}
+
+        # Prefer an existing Image Editor if the user already has one open.
+        image_area = None
+        for area in screen.areas:
+            if area.type == "IMAGE_EDITOR":
+                image_area = area
+                break
+
+        # If there is no Image Editor, split the current area and turn the new
+        # area into an Image Editor. This keeps the Grease Notes sidebar/viewport
+        # available while giving the thumbnail its own viewer.
+        if image_area is None:
+            original_areas = set(screen.areas)
+            try:
+                with context.temp_override(area=context.area, region=context.region):
+                    bpy.ops.screen.area_split(direction="VERTICAL", factor=0.65)
+            except Exception as exc:
+                self.report({"WARNING"}, f"Could not open Image Editor area: {exc}")
+                return {"CANCELLED"}
+
+            new_areas = [area for area in screen.areas if area not in original_areas]
+            image_area = new_areas[0] if new_areas else None
+
+            if image_area is None:
+                # Fallback: use the largest non-current area if Blender did not
+                # report the split as a new area for this build/context.
+                candidates = [area for area in screen.areas if area != context.area]
+                if candidates:
+                    image_area = max(candidates, key=lambda area: area.width * area.height)
+
+            if image_area is None:
+                self.report({"WARNING"}, "Could not find or create an Image Editor area.")
+                return {"CANCELLED"}
+
+            image_area.type = "IMAGE_EDITOR"
+
+        try:
+            image_area.spaces.active.image = image
+        except Exception as exc:
+            self.report({"WARNING"}, f"Could not assign thumbnail to Image Editor: {exc}")
+            return {"CANCELLED"}
+
+        frame_text = f" from frame {note.thumbnail_frame_number}" if note.thumbnail_frame_number >= 0 else ""
+        self.report({"INFO"}, f"Opened thumbnail{frame_text} in Image Editor.")
+        return {"FINISHED"}
+
+
 class GN_OT_jump_to_frame(bpy.types.Operator):
     bl_idname = "grease_notes.jump_to_frame"
     bl_label = "Jump to Note Frame"
@@ -252,6 +328,7 @@ classes = (
     GN_OT_delete_note,
     GN_OT_capture_thumbnail,
     GN_OT_delete_thumbnail,
+    GN_OT_view_thumbnail,
     GN_OT_jump_to_frame,
     GN_OT_select_linked_object,
     GN_OT_refresh_note_context,

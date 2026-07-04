@@ -85,6 +85,12 @@ Thumbnail: optional viewport snapshot
 
 ![sc1.png](sc1.png)
 
+### Added in v1.1.0
+
+view thumbnails in blender's image editor
+
+![sc2.png](sc2.png)
+
 ## Note Types
 
 Grease Notes supports several note types:
@@ -459,3 +465,29 @@ Good usage:
 Avoid expecting it to automatically manage every part of the project.
 
 Grease Notes is most effective when the user gives notes clear titles, useful tags, and direct descriptions.
+
+## Update: v1.1.0
+
+Grease Notes now includes a **View in Image Editor** option for captured thumbnails.
+
+When a note has a thumbnail, users can open that thumbnail directly inside Blender’s Image Editor. This makes it easier to inspect saved visual references at a larger size without changing the note or recapturing the image.
+
+### Added
+
+- View captured note thumbnails in Blender’s Image Editor
+
+- Keeps the existing thumbnail workflow unchanged
+
+- Users can still capture, update, and delete thumbnails from the Grease Notes panel
+
+### Compatibility Note
+
+Grease Notes targets **Blender 5.1 or newer**.
+
+The extension manifest uses:
+
+```toml
+blender_version_min = "5.1.0"
+```
+
+This means the extension is intended for Blender 5.1+ and should also work in Blender 5.2 unless Blender changes a related API.

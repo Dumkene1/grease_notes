@@ -4,7 +4,7 @@
 bl_info = {
     "name": "Grease Notes",
     "author": "Dk",
-    "version": (0, 1, 3),
+    "version": (1, 1, 0),
     "blender": (5, 1, 0),
     "location": "3D Viewport > Sidebar > Grease Notes",
     "description": "Create notes linked to scenes, objects, frames, and Grease Pencil animation.",

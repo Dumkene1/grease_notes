@@ -189,6 +189,11 @@ class GN_PT_main_panel(bpy.types.Panel):
         op.use_note_frame = False
 
         row = thumb_box.row(align=True)
+        view_row = row.operator("grease_notes.view_thumbnail", text="View in Image Editor", icon="IMAGE")
+        view_row.index = index
+        row.enabled = bool(note.thumbnail_image_name)
+
+        row = thumb_box.row(align=True)
         row.operator("grease_notes.delete_thumbnail", text="Delete Thumbnail", icon="TRASH").index = index
 
         meta = details.column(align=True)
